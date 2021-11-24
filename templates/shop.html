@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block shop %}
+  {{ title }}
+
+  {% load static %}
+  <div class="card" style="width: 18rem;">
+    <img src="{{ img }}" class="card-img-top" alt={{ name }}>
+    <div class="card-body">
+      <h5 class="card-title">{{ name }}</h5>
+      <p class="card-text">{{ intro }}</p>
+      <p class="card-text">售價：{{ price }}</p>
+      <a href="#" class="btn btn-secondary">加入購物車</a>
+      <a href="#" class="btn btn-primary">商品介紹</a>
+    </div>
+  </div>
+
+{% endblock %}
