@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from shop.views import index, shop
+from shop.api import ItemList, ItemSpecific
 
 urlpatterns = [
+    # ----- view -----
     path('admin/', admin.site.urls),
     path('', index),
     path('shop/<str:category>/', shop),
+    # ----- api -----
+    path('api/items/', ItemList.as_view()),
+    path('api/items/<int:item_id>/', ItemSpecific.as_view()),
 ]
