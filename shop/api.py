@@ -14,6 +14,23 @@ from django.conf import settings
 import os
 
 
+def save_images(request, item_id, response_msg):
+    query_dict = request.data.copy()
+    query_dict.update({'item': item_id})  # `item[0]` is the latest item.
+
+    response_msg.update({'images': []})
+    files = request.FILES.getlist('images')
+    for file in files:
+        query_dict['image'] = file
+        img_serializer = ImageSerializer(data=query_dict)
+        if img_serializer.is_valid():
+            img_serializer.save()
+            response_msg['images'].append(dict(img_serializer.data))
+        else:
+            response_msg['images'].append(dict(img_serializer.errors))
+    return response_msg
+
+
 class ItemList(APIView):
     def get(self, request):
         items = Item.objects.all()
@@ -34,20 +51,7 @@ class ItemList(APIView):
                 intro=item_serializer.data['intro']
             ).order_by('-id')[:1]
 
-            query_dict = request.data.copy()
-            query_dict.update({'item': item[0].id})
-
-            response_message = dict(item_serializer.data.items())
-            response_message.update({'images': []})
-            files = request.FILES.getlist('images')
-            for file in files:
-                query_dict['image'] = file
-                img_serializer = ImageSerializer(data=query_dict)
-                if img_serializer.is_valid():
-                    img_serializer.save()
-                    response_message['images'].append(dict(img_serializer.data))
-                else:
-                    response_message['images'].append(dict(img_serializer.errors))
+            response_message = save_images(request, item[0].id, dict(item_serializer.data.items()))
             return Response(response_message, status=status.HTTP_201_CREATED)
         return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -69,7 +73,8 @@ class ItemSpecific(APIView):
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            response_message = save_images(request, item.id, dict(serializer.data.items()))
+            return Response(response_message)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id):
@@ -78,4 +83,11 @@ class ItemSpecific(APIView):
             os.remove(os.path.join(settings.BASE_DIR, img.image.path))
         item = self.get_object(item_id)
         item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ImageSpecific(APIView):
+    def delete(self, request, img):
+        image = Image.objects.get(image=img.replace('-*slash*-', '/'))
+        image.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
