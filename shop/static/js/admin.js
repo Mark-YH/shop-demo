@@ -1,6 +1,5 @@
 let submitCreateItem = document.querySelector('#submit')
 let showCreateItemForm = document.querySelector('#btnCreateItem')
-let btnReset = document.querySelector('#reset')
 
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 

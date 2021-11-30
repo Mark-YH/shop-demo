@@ -2,6 +2,7 @@
 
 {% block shop %}
   <h1 class="text-center">{{ title }}</h1>
+  <!-- Item display -->
   <div class="row">
     {% for item in items %}
       <div class="card col-lg-3 my-1" style="width: 15rem;">
@@ -39,26 +40,72 @@
 
           <a class="carousel-control-prev" href="#carouselExampleIndicators-{{ item.id }}" role="button"
              data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon"></span>
             <span class="sr-only">Previous</span>
           </a>
 
           <a class="carousel-control-next" href="#carouselExampleIndicators-{{ item.id }}" role="button"
              data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon"></span>
             <span class="sr-only">Next</span>
           </a>
         </div>
 
         <div class="card-body">
           <h5 class="card-title">{{ item.name }}</h5>
-          <p class="card-text">售價：{{ item.price }}</p>
-          <a href="#" class="btn btn-secondary">加入購物車</a>
-          <a href="#" class="btn btn-primary">商品介紹</a>
+          <p class="card-text text-right">售價：${{ item.price }}</p>
+          <div class="row justify-content-center">
+            <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
+            <a href="#" class="btn btn-primary mx-1">商品介紹</a>
+          </div>
+          <div class="row justify-content-end admin-area">
+            <button id="btnEditItem-{{ item.id }}" class="admin-btn-edit btn btn-warning mt-1 mx-1"
+                    data-toggle="modal" data-target="#modalEdit">編輯
+            </button>
+            <button id="btnDeleteItem-{{ item.id }}" class="admin-btn-delete btn btn-danger mt-1 mx-1"
+                    data-toggle="modal" data-target="#modalDelete">刪除
+            </button>
+          </div>
         </div>
       </div>
     {% empty %}
       <p class="text-center">此分類目前沒有商品...</p>
     {% endfor %}
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalEdit" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">編輯商品資訊</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% include 'createItem.html' %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalDelete" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h5>確認刪除此商品？</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+          <button type="button" class="btn btn-danger" id="confirmDel" data-dismiss="modal">確認刪除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/shop.js' %}"></script>
 {% endblock %}
