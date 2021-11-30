@@ -4,8 +4,8 @@ Created on 2021/11/27
 
 @author: Mark Hsu
 """
-from shop.models import Consumer, Item, Order
-from shop.Serializer import OrderSerializer, ConsumerSerializer, ItemSerializer
+from shop.models import Consumer, Item, Order, Image
+from shop.Serializer import OrderSerializer, ConsumerSerializer, ItemSerializer, ImageSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,11 +19,35 @@ class ItemList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = ItemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        item_serializer = ItemSerializer(data=request.data)
+        if item_serializer.is_valid():
+            item_serializer.save()
+
+            # The following filter is equivalent to SQL schema:
+            # select * from "shop_item"
+            # where name='data['name']' and intro='data['intro']'
+            # order by id desc limit 1;
+            item = Item.objects.filter(
+                name=item_serializer.data['name'],
+                intro=item_serializer.data['intro']
+            ).order_by('-id')[:1]
+
+            query_dict = request.data.copy()
+            query_dict.update({'item': item[0].id})
+
+            response_message = dict(item_serializer.data.items())
+            response_message.update({'images': []})
+            files = request.FILES.getlist('images')
+            for file in files:
+                query_dict['image'] = file
+                img_serializer = ImageSerializer(data=query_dict)
+                if img_serializer.is_valid():
+                    img_serializer.save()
+                    response_message['images'].append(dict(img_serializer.data))
+                else:
+                    response_message['images'].append(dict(img_serializer.errors))
+            return Response(response_message, status=status.HTTP_201_CREATED)
+        return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ItemSpecific(APIView):
@@ -40,7 +64,7 @@ class ItemSpecific(APIView):
 
     def put(self, request, item_id):
         item = self.get_object(item_id)
-        serializer = ItemSerializer(item, data=request.data)
+        serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -49,4 +73,5 @@ class ItemSpecific(APIView):
     def delete(self, request, item_id):
         item = self.get_object(item_id)
         item.delete()
+        # TODO delete images
         return Response(status=status.HTTP_204_NO_CONTENT)

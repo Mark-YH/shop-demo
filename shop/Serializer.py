@@ -5,13 +5,21 @@ Created on 2021/11/27
 @author: Mark Hsu
 """
 from rest_framework import serializers
-from shop.models import Item, Consumer, Order
+from shop.models import Item, Consumer, Order, Image
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['id', 'item', 'image']
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(many=True, source='image_set', required=False)
+
     class Meta:
         model = Item
-        fields = ['id', 'category', 'name', 'price', 'intro', 'inventory']
+        fields = ['id', 'category', 'name', 'price', 'intro', 'inventory', 'images']
 
 
 class ConsumerSerializer(serializers.ModelSerializer):

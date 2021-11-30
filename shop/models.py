@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators
 
 
 # Create your models here.
@@ -15,7 +16,7 @@ class Item(models.Model):
 
 
 class Consumer(models.Model):
-    account = models.CharField(max_length=50, unique=True)
+    account = models.CharField(max_length=50, unique=True, validators=[validators.EmailValidator])
     password = models.CharField(max_length=512)
 
     def __str__(self):
@@ -29,4 +30,12 @@ class Order(models.Model):
     datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.order_id
+        return str(self.order_id)
+
+
+class Image(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='image_set')
+    image = models.ImageField(upload_to='%Y/%m/%d/', validators=[validators.FileExtensionValidator])
+
+    def __str__(self):
+        return str(self.image)
