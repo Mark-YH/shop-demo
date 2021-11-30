@@ -10,6 +10,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
+from django.conf import settings
+import os
 
 
 class ItemList(APIView):
@@ -71,7 +73,9 @@ class ItemSpecific(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id):
+        images = Image.objects.filter(item_id=item_id)
+        for img in images:
+            os.remove(os.path.join(settings.BASE_DIR, img.image.path))
         item = self.get_object(item_id)
         item.delete()
-        # TODO delete images
         return Response(status=status.HTTP_204_NO_CONTENT)
