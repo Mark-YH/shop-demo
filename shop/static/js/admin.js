@@ -1,43 +1,73 @@
-let input = document.querySelector('input[type="file"]')
-let btn = document.querySelector('#btn')
+let submitCreateItem = document.querySelector('#submit')
+let showCreateItemForm = document.querySelector('#btnCreateItem')
+let btnReset = document.querySelector('#reset')
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-// const csrftoken = getCookie('csrftoken');
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-btn.addEventListener('click', function (evt) {
+
+
+reset.addEventListener('click', function (evt) {
+    let rs = document.querySelector('#submitResult')
+    for (let i = 0; i < rs.childElementCount; i++) {
+        rs.removeChild(rs.childNodes[i])
+    }
+})
+
+showCreateItemForm.addEventListener('click', function (evt) {
+    document.querySelector('#formCreateItem').removeAttribute('hidden')
+})
+
+submitCreateItem.addEventListener('click', function (evt) {
     evt.preventDefault()
     let data = new FormData()
-    data.append('images', input.files[0])
-    data.append('category', 'kids')
-    data.append('name', 'what')
-    data.append('price', '100')
-    data.append('inventory', '1')
-    data.append('intro', 'introduction')
+    let input = document.querySelector('input[type="file"]')
+    let category = document.querySelector('#categorySelect').value
+    let itemName = document.querySelector('#itemName').value
+    let intro = document.querySelector('#intro').value
+    let price = document.querySelector('#price').value
+    let inventory = document.querySelector('#inventory').value
+    data.append('category', category)
+    data.append('name', itemName)
+    data.append('price', price)
+    data.append('inventory', inventory)
+    data.append('intro', intro)
+
+    for (let i = 0; i < input.files.length; i++) {
+        data.append('images', input.files[i])
+    }
+
+    let rs = document.querySelector('#submitResult')
+    let msg = ''
     fetch('/api/items/', {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
         body: data
     }).then(res => {
-            console.log(res.headers)
-            console.log(res.body)
+        if (res.ok) {
+            return res.json()
+        } else {
+            throw res.json()
         }
-    ).catch(e => {
-            console.log(e)
+    }).then(jsonData => {
+        console.log(jsonData)
+
+        let form = document.querySelectorAll('input, textarea')
+        for (let i = 0; i < form.length; i++) {
+            form[i].value = ''
         }
-    )
+        let selectors = document.querySelectorAll('select')
+        for (let i = 0; i < selectors.length; i++) {
+            selectors[i].selectedIndex = 0
+        }
+        msg = '上傳成功'
+    }).catch(e => {
+        console.log(e)
+        msg = '上傳失敗'
+    }).finally(() => {
+        for (let i = 0; i < rs.childElementCount; i++) {
+            rs.childNodes[i].remove()
+        }
+        let element = document.createElement('p')
+        element.innerHTML = msg
+        rs.appendChild(element)
+    })
 })

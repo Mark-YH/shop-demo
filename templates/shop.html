@@ -4,18 +4,20 @@
   <h1 class="text-center">{{ title }}</h1>
   <div class="row">
     {% for item in items %}
-      <div class="card col-lg-3" style="width: 15rem;">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      <div class="card col-lg-3 my-1" style="width: 15rem;">
+        <div id="carouselExampleIndicators-{{ item.id }}" class="carousel slide" data-ride="carousel">
+
           <ol class="carousel-indicators">
             {% for image in  item.image_set.all %}
               {% if forloop.first %}
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}"
+                <li data-target="#carouselExampleIndicators-{{ item.id }}" data-slide-to="{{ forloop.counter0 }}"
                     class="active"></li>
               {% else %}
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}"></li>
+                <li data-target="#carouselExampleIndicators-{{ item.id }}" data-slide-to="{{ forloop.counter0 }}"></li>
               {% endif %}
             {% endfor %}
           </ol>
+
           <div class="carousel-inner">
             {% for image in  item.image_set.all %}
               {% if forloop.first %}
@@ -27,17 +29,27 @@
                   <img class="d-block w-100" src="/media/{{ image }}" alt="{{ item.name }}">
                 </div>
               {% endif %}
+            {% empty %}
+              <div class="carousel-item active">
+                {% load static %}
+                <img class="d-block w-100" src="{% static 'img/not-found.png' %}" alt="Image not found">
+              </div>
             {% endfor %}
           </div>
-          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+
+          <a class="carousel-control-prev" href="#carouselExampleIndicators-{{ forloop.counter }}" role="button"
+             data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
           </a>
-          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+
+          <a class="carousel-control-next" href="#carouselExampleIndicators-{{ forloop.counter }}" role="button"
+             data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
           </a>
         </div>
+
         <div class="card-body">
           <h5 class="card-title">{{ item.name }}</h5>
           <p class="card-text">售價：{{ item.price }}</p>
