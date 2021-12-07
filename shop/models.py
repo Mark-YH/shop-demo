@@ -3,9 +3,15 @@ from django.core import validators
 
 
 # Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=50, null=False, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Item(models.Model):
-    category = models.CharField(max_length=50)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     name = models.CharField(max_length=50)
     price = models.PositiveIntegerField()
     intro = models.TextField()
@@ -35,7 +41,7 @@ class Order(models.Model):
 
 class Image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='image_set')
-    image = models.BinaryField(blank=True, editable=True, validators=[validators.validate_image_file_extension])
+    image = models.BinaryField()
 
     def __str__(self):
         return str(self.image)

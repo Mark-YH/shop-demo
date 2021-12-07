@@ -4,7 +4,7 @@ Created on 2021/11/27
 
 @author: Mark Hsu
 """
-from shop.models import Consumer, Item, Order, Image
+from shop.models import Consumer, Item, Order, Image, Category
 from shop.Serializer import OrderSerializer, ConsumerSerializer, ItemSerializer
 from rest_framework import status
 from rest_framework.views import APIView
@@ -52,7 +52,7 @@ class ItemList(APIView):
     def post(self, request):
         item_serializer = ItemSerializer(data=request.data)
         if item_serializer.is_valid():
-            item_serializer.save()
+            item_serializer.save(category=Category.objects.get(name=request.data['category']))
 
             # The following filter is equivalent to SQL schema:
             # select * from "shop_item"
@@ -84,7 +84,7 @@ class ItemSpecific(APIView):
         item = self.get_object(item_id)
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(category=Category.objects.get(name=request.data['category']))
             response_message = save_images(request, item.id, dict(serializer.data.items()))
             return Response(response_message)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

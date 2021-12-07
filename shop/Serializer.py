@@ -16,6 +16,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, source='image_set', required=False)
+    category = serializers.StringRelatedField()
 
     class Meta:
         model = Item

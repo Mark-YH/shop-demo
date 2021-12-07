@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from shop.models import Item
+from shop.models import Item, Category
 import base64
 
 
@@ -30,7 +30,7 @@ def get_items_dict(items_obj):
 
 def shop_category(request, category):
     title = str.upper(category) + ' | Shop Demo'
-    items_obj = Item.objects.filter(category=category)
+    items_obj = Item.objects.filter(category=Category.objects.get(name=category))
     items = get_items_dict(items_obj)
     return render(request, 'shop.html', locals())
 
