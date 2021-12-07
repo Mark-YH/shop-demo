@@ -9,7 +9,7 @@
         <div id="carouselExampleIndicators-{{ item.id }}" class="carousel slide" data-ride="carousel">
 
           <ol class="carousel-indicators">
-            {% for image in  item.image_set.all %}
+            {% for image in  item.images %}
               {% if forloop.first %}
                 <li data-target="#carouselExampleIndicators-{{ item.id }}" data-slide-to="{{ forloop.counter0 }}"
                     class="active"></li>
@@ -20,20 +20,20 @@
           </ol>
 
           <div class="carousel-inner">
-            {% for image in  item.image_set.all %}
+            {% for image in  item.images %}
               {% if forloop.first %}
                 <div class="carousel-item active">
-                  <button type="button" id="adminClose-{{ image }}" class="admin close" style="margin-bottom:-50%;"
+                  <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
                           data-toggle="modal" data-target="#modalDeleteImage">
                     <span>&times;</span></button>
-                  <a href="#"><img class="d-block w-100" src="/media/{{ image }}" alt="{{ item.name }}"></a>
+                  <a href="#"><img class="d-block w-100" src="data:image/png;base64,{{ image.image.decode }}" alt="{{ item.name }}"></a>
                 </div>
               {% else %}
                 <div class="carousel-item">
-                  <button type="button" id="adminClose-{{ image }}" class="admin close" style="margin-bottom:-50%;"
+                  <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
                           data-toggle="modal" data-target="#modalDeleteImage">
                     <span>&times;</span></button>
-                  <a href="#"><img class="d-block w-100" src="/media/{{ image }}" alt="{{ item.name }}"></a>
+                  <a href="#"><img class="d-block w-100" src="data:image/png;base64,{{ image.image.decode }}" alt="{{ item.name }}"></a>
                 </div>
               {% endif %}
             {% empty %}

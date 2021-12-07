@@ -30,5 +30,5 @@ urlpatterns = [
     # ----- api -----
     path('api/items/', ItemList.as_view()),
     path('api/items/<int:item_id>/', ItemSpecific.as_view()),
-    path('api/image/<str:img>/', ImageSpecific.as_view()),
+    path('api/images/<int:image_id>/', ImageSpecific.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

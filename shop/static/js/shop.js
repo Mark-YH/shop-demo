@@ -84,12 +84,11 @@ function delItem(evt) {
 
 function deleteImage(evt) {
     let image = evt.currentTarget.getAttribute('id')
-    index = image.search('-') + 1
-    image = image.slice(index, image.length).replaceAll('/', '-*slash*-')
-    console.log(image)
+    let image_id = image.split('-')[1]
+
     let confirm = document.querySelector("#confirmDelImage")
     confirm.addEventListener('click', function (innerEvt) {
-        fetch('/api/image/' + image + '/', {
+        fetch('/api/images/' + image_id + '/', {
             method: 'DELETE',
             headers: {'X-CSRFToken': csrftoken},
         }).then(res => {

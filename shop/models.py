@@ -35,7 +35,7 @@ class Order(models.Model):
 
 class Image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='image_set')
-    image = models.ImageField(upload_to='%Y/%m/%d/', validators=[validators.FileExtensionValidator])
+    image = models.BinaryField(blank=True, editable=True, validators=[validators.validate_image_file_extension])
 
     def __str__(self):
         return str(self.image)
