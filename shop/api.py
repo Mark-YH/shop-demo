@@ -80,7 +80,10 @@ class ItemSpecific(APIView):
     def delete(self, request, item_id):
         images = Image.objects.filter(item_id=item_id)
         for img in images:
-            os.remove(os.path.join(settings.BASE_DIR, img.image.path))
+            try:
+                os.remove(os.path.join(settings.BASE_DIR, img.image.path))
+            except FileNotFoundError:
+                continue
         item = self.get_object(item_id)
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
