@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block details %}
+
+  <div class="row">
+    <div class="card col-lg-5 mt-5">
+      {% include 'img_carousel.html' %}
+    </div>
+    <div class="col mt-5">
+      <div class="row m-2"><strong>{{ item.name }}</strong></div>
+      <div class="row m-2">售價：{{ item.price }}</div>
+      <div class="row m-2">庫存：{{ item.inventory }}</div>
+      <div class="row m-2">
+        <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
+        <a href="#" class="btn btn-primary mx-1">直接購買</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-2">商品介紹</div>
+    <div class="col">{{ item.intro |linebreaks }}</div>
+  </div>
+
+  <script type="text/javascript">
+      let btns = document.querySelectorAll('.admin.close')
+      for (let i = 0; i < btns.length; i++) {
+          btns[i].remove()
+      }
+  </script>
+{% endblock %}

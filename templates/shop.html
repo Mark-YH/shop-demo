@@ -6,63 +6,14 @@
   <div class="row">
     {% for item in items %}
       <div class="card col-lg-3 mt-5" style="width: 15rem;">
-        <div id="carouselExampleIndicators-{{ item.id }}" class="carousel slide" data-ride="carousel">
-
-          <ol class="carousel-indicators">
-            {% for image in  item.images %}
-              {% if forloop.first %}
-                <li data-target="#carouselExampleIndicators-{{ item.id }}" data-slide-to="{{ forloop.counter0 }}"
-                    class="active"></li>
-              {% else %}
-                <li data-target="#carouselExampleIndicators-{{ item.id }}" data-slide-to="{{ forloop.counter0 }}"></li>
-              {% endif %}
-            {% endfor %}
-          </ol>
-
-          <div class="carousel-inner">
-            {% for image in  item.images %}
-              {% if forloop.first %}
-                <div class="carousel-item active">
-                  <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
-                          data-toggle="modal" data-target="#modalDeleteImage">
-                    <span>&times;</span></button>
-                  <a href="#"><img class="d-block w-100" src="data:image/png;base64,{{ image.image.decode }}" alt="{{ item.name }}"></a>
-                </div>
-              {% else %}
-                <div class="carousel-item">
-                  <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
-                          data-toggle="modal" data-target="#modalDeleteImage">
-                    <span>&times;</span></button>
-                  <a href="#"><img class="d-block w-100" src="data:image/png;base64,{{ image.image.decode }}" alt="{{ item.name }}"></a>
-                </div>
-              {% endif %}
-            {% empty %}
-              <div class="carousel-item active">
-                {% load static %}
-                <a href="#"><img class="d-block w-100" src="{% static 'img/not-found.png' %}" alt="Image not found"></a>
-              </div>
-            {% endfor %}
-          </div>
-
-          <a class="carousel-control-prev" href="#carouselExampleIndicators-{{ item.id }}" role="button"
-             data-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-
-          <a class="carousel-control-next" href="#carouselExampleIndicators-{{ item.id }}" role="button"
-             data-slide="next" style="margin-top: 10%">
-            <span class="carousel-control-next-icon"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div>
+        {% include 'img_carousel.html' %}
 
         <div class="card-body">
           <h5 class="card-title">{{ item.name }}</h5>
           <p class="card-text text-right">售價：${{ item.price }}</p>
           <div class="row justify-content-center">
             <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
-            <a href="#" class="btn btn-primary mx-1">商品介紹</a>
+            <a href="/shop/details/{{ item.id }}/" class="btn btn-primary mx-1">商品介紹</a>
           </div>
           <div class="row justify-content-end admin-area">
             <button id="btnEditItem-{{ item.id }}" class="admin edit btn btn-warning mt-1 mr-1"
@@ -129,7 +80,7 @@
       </div>
     </div>
   </div>
-
+  {% load static %}
   <script src="{% static 'js/shop.js' %}"></script>
   <script src="{% static 'js/get_form_data.js' %}"></script>
 {% endblock %}

@@ -42,5 +42,12 @@ def shop(request):
     return render(request, 'shop.html', locals())
 
 
+def details(request, item_id):
+    item_obj = Item.objects.get(id=item_id)
+    item = get_items_dict([item_obj])[0]
+    title = item['name'] + ' | Shop Demo'
+    return render(request, 'details.html', locals())
+
+
 def my_admin(request):
     return render(request, 'admin.html', locals())
