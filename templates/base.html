@@ -22,9 +22,20 @@
       <li class="nav-item"><a class="nav-link" href="/shop/men/">Men</a></li>
       <li class="nav-item"><a class="nav-link" href="/shop/women/">Women</a></li>
       <li class="nav-item"><a class="nav-link" href="/shop/kids/">Kids</a></li>
-      <li class="nav-item"><a class="nav-link" href="/admin/">商品後台管理系統</a></li>
-      <li class="nav-item"><a class="nav-link" href="/django/admin/">Django admin</a></li>
+      {% if is_admin %}
+        <li class="nav-item"><a class="nav-link" href="/admin/">商品後台管理系統</a></li>
+        <li class="nav-item"><a class="nav-link" href="/django/admin/">Django admin</a></li>
+      {% endif %}
     </ul>
+    <div class="my-2 my-lg-0">
+      {% if is_login %}
+        <span class="mr-1">Hi, {{ request.user }}</span>
+        <a href="/logout/" id="logout" class="btn btn-outline-success my-2 my-sm-0">登出</a>
+      {% else %}
+        <span class="mr-1">Hi, Guest</span>
+        <a href="/login/" id="login" class="btn btn-outline-success my-2 my-sm-0">登入</a>
+      {% endif %}
+    </div>
   </div>
 </nav>
 
@@ -33,6 +44,8 @@
   {% block shop %} {% endblock %}
   {% block admin %} {% endblock %}
   {% block details %} {% endblock %}
+  {% block login %} {% endblock %}
+  {% block register %} {% endblock %}
 </main>
 
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="

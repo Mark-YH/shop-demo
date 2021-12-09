@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block register %}
+  <div class="row justify-content-center mt-5">
+    <form action="" method="POST"> {% csrf_token %}
+      <div class="form-group row">
+        <label for="inputAccount" class="text-center col-md-4 col-form-label">帳號</label>
+        <div class="col-md">
+          <input type="text" name="account" id="inputAccount" class="form-control" required>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="exampleInputPassword1" class="text-center col-md-4 col-form-label">密碼</label>
+        <div class="col-md">
+          <input type="password" name="password" id="exampleInputPassword1" class="form-control" required></div>
+      </div>
+      <div class="form-group row">
+        <label for="exampleInputPassword2" class="text-center col-md-4 col-form-label">確認密碼</label>
+        <div class="col-md">
+          <input type="password" name="password_confirm" id="exampleInputPassword2" class="form-control" required></div>
+      </div>
+      <div class="form-group row"><small id="msg">{{ msg }}</small></div>
+      <div class="form-group row">
+        <div class="col-md">
+          <button type="submit" id="btnSubmit" class="btn btn-primary">註冊</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script type="text/javascript">
+      let password1 = document.querySelector('#exampleInputPassword1')
+      let password2 = document.querySelector('#exampleInputPassword2')
+      let btnSubmit = document.querySelector('#btnSubmit')
+      let msg = document.querySelector('#msg')
+      password1.addEventListener('change', controlButton)
+      password2.addEventListener('change', controlButton)
+
+      function controlButton(evt) {
+          if (password1.value === password2.value) {
+              btnSubmit.removeAttribute('disabled')
+              msg.innerHTML = ''
+          } else {
+              btnSubmit.setAttribute('disabled', '')
+              msg.innerHTML = '請確認密碼是否正確'
+          }
+      }
+  </script>
+{% endblock %}

@@ -15,18 +15,22 @@
     {% for image in  item.images %}
       {% if forloop.first %}
         <div class="carousel-item active">
-          <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
-                  data-toggle="modal" data-target="#modalDeleteImage">
-            <span>&times;</span></button>
+          {% if is_admin %}
+            <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
+                    data-toggle="modal" data-target="#modalDeleteImage">
+              <span>&times;</span></button>
+          {% endif %}
           <a href="/shop/details/{{ item.id }}/">
             <img class="d-block w-100" src="data:image/png;base64,{{ image.image.decode }}"
                  alt="{{ item.name }}"></a>
         </div>
       {% else %}
         <div class="carousel-item">
-          <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
-                  data-toggle="modal" data-target="#modalDeleteImage">
-            <span>&times;</span></button>
+          {% if is_admin %}
+            <button type="button" id="adminClose-{{ image.id }}" class="admin close" style="margin-bottom:-50%;"
+                    data-toggle="modal" data-target="#modalDeleteImage">
+              <span>&times;</span></button>
+          {% endif %}
           <a href="/shop/details/{{ item.id }}/"><img class="d-block w-100"
                                                       src="data:image/png;base64,{{ image.image.decode }}"
                                                       alt="{{ item.name }}"></a>
@@ -35,7 +39,8 @@
     {% empty %}
       <div class="carousel-item active">
         {% load static %}
-        <a href="#"><img class="d-block w-100" src="{% static 'img/not-found.png' %}" alt="Image not found"></a>
+        <a href="/shop/details/{{ item.id }}/"><img class="d-block w-100" src="{% static 'img/not-found.png' %}"
+                                                    alt="Image not found"></a>
       </div>
     {% endfor %}
   </div>

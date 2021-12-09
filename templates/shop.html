@@ -15,14 +15,16 @@
             <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
             <a href="/shop/details/{{ item.id }}/" class="btn btn-primary mx-1">商品介紹</a>
           </div>
-          <div class="row justify-content-end admin-area">
-            <button id="btnEditItem-{{ item.id }}" class="admin edit btn btn-warning mt-1 mr-1"
-                    data-toggle="modal" data-target="#modalEdit">編輯
-            </button>
-            <button id="btnDeleteItem-{{ item.id }}" class="admin delete btn btn-danger mt-1 ml-1"
-                    data-toggle="modal" data-target="#modalDeleteItem">刪除
-            </button>
-          </div>
+          {% if is_admin %}
+            <div class="row justify-content-end admin-area">
+              <button id="btnEditItem-{{ item.id }}" class="admin edit btn btn-warning mt-1 mr-1"
+                      data-toggle="modal" data-target="#modalEdit">編輯
+              </button>
+              <button id="btnDeleteItem-{{ item.id }}" class="admin delete btn btn-danger mt-1 ml-1"
+                      data-toggle="modal" data-target="#modalDeleteItem">刪除
+              </button>
+            </div>
+          {% endif %}
         </div>
       </div>
     {% empty %}
@@ -32,55 +34,58 @@
     {% endfor %}
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="modalEdit" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">編輯商品資訊</h5>
-          <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          {% include 'createItem.html' %}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary" id="confirmEdit" data-dismiss="modal">修改</button>
+  {% if is_admin %}
+    <!-- Modal -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" data-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">編輯商品資訊</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% include 'createItem.html' %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            <button type="button" class="btn btn-primary" id="confirmEdit" data-dismiss="modal">修改</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="modalDeleteItem" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-body">
-          <h5>確認刪除此商品？</h5>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
-          <button type="button" class="btn btn-danger" id="confirmDelItem" data-dismiss="modal">確認刪除</button>
+    <div class="modal fade" id="modalDeleteItem" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h5>確認刪除此商品？</h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+            <button type="button" class="btn btn-danger" id="confirmDelItem" data-dismiss="modal">確認刪除</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="modalDeleteImage" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-body">
-          <h5>確認刪除此照片？</h5>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
-          <button type="button" class="btn btn-danger" id="confirmDelImage" data-dismiss="modal">確認刪除</button>
+    <div class="modal fade" id="modalDeleteImage" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h5>確認刪除此照片？</h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+            <button type="button" class="btn btn-danger" id="confirmDelImage" data-dismiss="modal">確認刪除</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  {% load static %}
-  <script src="{% static 'js/shop.js' %}"></script>
-  <script src="{% static 'js/get_form_data.js' %}"></script>
+    {% load static %}
+    <script src="{% static 'js/shop.js' %}"></script>
+
+    <script src="{% static 'js/get_form_data.js' %}"></script>
+  {% endif %}
 {% endblock %}
