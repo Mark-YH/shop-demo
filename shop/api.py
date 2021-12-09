@@ -50,6 +50,8 @@ class ItemList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        if not request.user.is_staff:
+            return Response({'Permission': 'Denied'}, status.HTTP_401_UNAUTHORIZED)
         item_serializer = ItemSerializer(data=request.data)
         if item_serializer.is_valid():
             item_serializer.save(category=Category.objects.get(name=request.data['category']))
@@ -81,6 +83,8 @@ class ItemSpecific(APIView):
         return Response(serializer.data)
 
     def put(self, request, item_id):
+        if not request.user.is_staff:
+            return Response({'Permission': 'Denied'}, status.HTTP_401_UNAUTHORIZED)
         item = self.get_object(item_id)
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
@@ -90,6 +94,8 @@ class ItemSpecific(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id):
+        if not request.user.is_staff:
+            return Response({'Permission': 'Denied'}, status.HTTP_401_UNAUTHORIZED)
         item = self.get_object(item_id)
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -101,6 +107,8 @@ class ImageSpecific(APIView):
         return HttpResponse(bytes(image.image), content_type='image/png')
 
     def delete(self, request, image_id):
+        if not request.user.is_staff:
+            return Response({'Permission': 'Denied'}, status.HTTP_401_UNAUTHORIZED)
         image = Image.objects.get(id=image_id)
         image.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
