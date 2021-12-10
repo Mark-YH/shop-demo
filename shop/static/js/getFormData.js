@@ -1,4 +1,4 @@
-function get_form_data() {
+function getFormData() {
     console.log('---get form data---')
     let data = new FormData()
     let input = document.querySelector('input[type="file"]')

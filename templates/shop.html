@@ -6,7 +6,7 @@
   <div class="row">
     {% for item in items %}
       <div class="card col-lg-3 mt-5" style="width: 15rem;">
-        {% include 'img_carousel.html' %}
+        {% include 'imgCarousel.html' %}
 
         <div class="card-body">
           <h5 class="card-title">{{ item.name }}</h5>
@@ -86,6 +86,6 @@
     {% load static %}
     <script src="{% static 'js/shop.js' %}"></script>
 
-    <script src="{% static 'js/get_form_data.js' %}"></script>
+    <script src="{% static 'js/getFormData.js' %}"></script>
   {% endif %}
 {% endblock %}

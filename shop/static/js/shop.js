@@ -46,7 +46,7 @@ function setEditForm(evt) {
             fetch('/api/items/' + item_id + '/', {
                 method: 'PUT',
                 headers: {'X-CSRFToken': csrftoken},
-                body: get_form_data(),
+                body: getFormData(),
             }).then(res => {
                 console.log(res)
             }).catch(e => {

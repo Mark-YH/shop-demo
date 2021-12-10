@@ -23,7 +23,7 @@ submitCreateItem.addEventListener('click', function (evt) {
     fetch('/api/items/', {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
-        body: get_form_data()
+        body: getFormData()
     }).then(res => {
         if (res.ok) {
             return res.json()
