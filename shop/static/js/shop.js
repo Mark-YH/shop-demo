@@ -67,7 +67,7 @@ function delItem(evt) {
     confirm.addEventListener('click', function (innerEvt) {
         fetch('/api/items/' + item_id + '/', {
                 method: 'DELETE',
-                header: {'X-CSRFToken': csrftoken},
+                headers: {'X-CSRFToken': csrftoken},
             }
         ).then(res => {
             if (res.ok)
