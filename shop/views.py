@@ -20,7 +20,7 @@ def get_items_dict(items_obj):
             'intro': item_obj.intro,
             'images': [],
         })
-        for image in item_obj.image_set.all():
+        for image in item_obj.images.all():
             items[i]['images'].append({
                 'id': image.id,
                 'image': base64.b64encode(bytes(image.image))

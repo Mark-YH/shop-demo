@@ -4,16 +4,17 @@ Created on 2021/11/27
 
 @author: Mark Hsu
 """
-from shop.models import Consumer, Item, Order, Image, Category
-from shop.Serializer import OrderSerializer, ConsumerSerializer, ItemSerializer
+from shop.models import Item, Image, Category
+from shop.Serializer import ItemSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404, HttpResponse
 import PIL.Image as PImage
+import copy
 
 
-def save_images(request, item_id, response_msg):
+def save_images(request, item, response_msg):
     def is_valid_image(f):
         try:
             PImage.open(f)
@@ -21,23 +22,19 @@ def save_images(request, item_id, response_msg):
         except IOError:
             return False
 
-    query_dict = request.data.copy()
-    query_dict.update({'item': item_id})  # `item[0]` is the latest item.
-
     response_msg.update({'images': []})
     files = request.FILES.getlist('images')
 
     PImage.init()
     for file in files:
         content_type = file.content_type.split('/')
-        import copy
         f = copy.deepcopy(file)
         if not (content_type[0] == 'image' and
                 content_type[1].upper() in PImage.EXTENSION.values() and
                 is_valid_image(f)):
             response_msg['images'].append({file.name: 'Invalid file type.'})
         else:
-            img = Image.objects.create(item_id=item_id, image=bytes(file.read()))
+            img = Image.objects.create(item=item, image=bytes(file.read()))
             img.save()
             response_msg['images'].append({file.name: 'Successful uploaded.'})
     return response_msg
@@ -54,18 +51,8 @@ class ItemList(APIView):
             return Response({'Permission': 'Denied'}, status.HTTP_401_UNAUTHORIZED)
         item_serializer = ItemSerializer(data=request.data)
         if item_serializer.is_valid():
-            item_serializer.save(category=Category.objects.get(name=request.data['category']))
-
-            # The following filter is equivalent to SQL schema:
-            # select * from "shop_item"
-            # where name='data['name']' and intro='data['intro']'
-            # order by id desc limit 1;
-            item = Item.objects.filter(
-                name=item_serializer.data['name'],
-                intro=item_serializer.data['intro']
-            ).order_by('-id')[:1]
-
-            response_message = save_images(request, item[0].id, dict(item_serializer.data.items()))
+            item = item_serializer.save(category=Category.objects.get(name=request.data['category']))
+            response_message = save_images(request, item, dict(item_serializer.data.items()))
             return Response(response_message, status=status.HTTP_201_CREATED)
         return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -89,7 +76,7 @@ class ItemSpecific(APIView):
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(category=Category.objects.get(name=request.data['category']))
-            response_message = save_images(request, item.id, dict(serializer.data.items()))
+            response_message = save_images(request, item, dict(serializer.data.items()))
             return Response(response_message)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
