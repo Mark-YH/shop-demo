@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from shop.views import index, shop_category, shop, my_admin, details, login, register, logout
+from shop.views import index, shop_category, shop, my_admin, details, login, register, logout, cart_view
 from shop.api import ItemList, ItemSpecific, ImageSpecific
 from django.conf import settings
 from django.conf.urls.static import static
@@ -31,6 +31,7 @@ urlpatterns = [
     path('login/', login),
     path('logout/', logout),
     path('register/', register),
+    path('cart/', cart_view),
     # ----- api -----
     path('api/items/', ItemList.as_view()),
     path('api/items/<int:item_id>/', ItemSpecific.as_view()),

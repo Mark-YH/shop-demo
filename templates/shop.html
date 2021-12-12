@@ -12,7 +12,7 @@
           <h5 class="card-title">{{ item.name }}</h5>
           <p class="card-text text-right">售價：${{ item.price }}</p>
           <div class="row justify-content-center">
-            <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
+            <button id="addCart-{{ item.id }}" class="cart btn btn-secondary mx-1">加入購物車</button>
             <a href="/shop/details/{{ item.id }}/" class="btn btn-primary mx-1">商品介紹</a>
           </div>
           {% if is_admin %}
@@ -84,8 +84,9 @@
       </div>
     </div>
     {% load static %}
-    <script src="{% static 'js/shop.js' %}"></script>
-
+    <script src="{% static 'js/shopCrud.js' %}"></script>
     <script src="{% static 'js/getFormData.js' %}"></script>
   {% endif %}
+  <script src="{% static 'js/shop.js' %}"></script>
+  <script src="{% static 'js/myUtils.js' %}"></script>
 {% endblock %}

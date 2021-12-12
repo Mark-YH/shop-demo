@@ -3,6 +3,7 @@ from shop.models import Item, Category
 from django.contrib import auth
 from django.contrib.auth.models import User
 import base64
+import json
 
 
 def get_authorization(user):
@@ -114,3 +115,50 @@ def register(request):
             auth.login(request, user=user)
             return redirect('/shop/')
     return render(request, 'register.html', locals())
+
+
+def cart_view(request):
+    def get_item(item_id):
+        try:
+            return Item.objects.get(id=item_id)
+        except Item.DoesNotExist:
+            return None
+
+    def post():
+        msg = '謝謝惠顧'
+        for key in request.POST:
+            if 'amount' in key:
+                item_id = key.split('-')[1]
+                item = get_item(item_id)
+                if item.inventory >= int(request.POST[key]):
+                    item.inventory -= int(request.POST[key])
+                    item.save()
+                else:
+                    msg = '商品數量不足'
+                    return render(request, 'cart.html', locals())
+        response = render(request, 'cart.html', locals())
+        response.delete_cookie('cart')
+        return response
+
+    def get():
+        msg = ''
+        cart = request.COOKIES['cart']
+        cart = json.loads(cart)
+        item_list = []
+        for k, v in cart.items():
+            item = get_item(k)
+            if item is not None:
+                amount = v if item.inventory > v else item.inventory
+                item_list.append({'id': item.id, 'name': item.name, 'amount': amount, 'price': item.price * amount})
+
+        total_price = sum([it['price'] for it in item_list])
+        return render(request, 'cart.html', locals())
+
+    if 'cart' not in request.COOKIES:
+        msg = '目前沒有任何商品'
+        return render(request, 'cart.html', locals())
+
+    if request.method == 'POST':
+        return post()
+    else:
+        return get()

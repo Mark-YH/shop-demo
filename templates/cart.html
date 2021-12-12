@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block cart %}
+  {% if msg != '' %}
+    <div class="row mt-3 justify-content-center"><p>{{ msg }}</p></div>
+  {% else %}
+    <div class="row mt-3 justify-content-center">
+      <div class="col-lg-10">
+        <form action="" method="POST"> {% csrf_token %}
+          {% for item in item_list %}
+            <div class="row input-group form-group">
+              <label class="input-group-text" for="name-{{ item.id }}">品名</label>
+              <input id="name-{{ item.id }}" class="form-control" type="text" name="name-{{ item.id }}"
+                     value="{{ item.name }}" readonly/>
+              <label class="input-group-text" for="amount-{{ item.id }}">數量</label>
+              <input id="amount-{{ item.id }}" class="col-sm-1 form-control text-right" type="number"
+                     name="amount-{{ item.id }}"
+                     value="{{ item.amount }}" readonly>
+
+              <label class="input-group-text" for="price-{{ item.id }}">價格</label>
+              <input id="price-{{ item.id }}" class="col-sm-2 form-control text-right" type="number"
+                     name="price-{{ item.id }}"
+                     value="{{ item.price }}" readonly>
+            </div>
+          {% endfor %}
+          <div class="row input-group-lg form-group">
+            <label class="input-group-text" for="total_price">總價</label>
+            <input id="total_price" class="input-group-text" type="number" value="{{ total_price }}" readonly>
+          </div>
+          <div class="row form-group">
+            <button id="clearCart" type="button" class="btn btn-secondary mr-1">清空購物車</button>
+            <button type="submit" class="btn btn-primary ml-1">確認購買</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+  <script>
+      let btnClear = document.querySelector('#clearCart')
+      btnClear.addEventListener('click', function (evt) {
+          document.cookie = "cart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.location.reload()
+      })
+  </script>
+{% endblock %}

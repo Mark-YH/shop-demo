@@ -11,8 +11,8 @@
       <div class="row m-2">售價：{{ item.price }}</div>
       <div class="row m-2">庫存：{{ item.inventory }}</div>
       <div class="row m-2">
-        <a href="#" class="btn btn-secondary mx-1">加入購物車</a>
-        <a href="#" class="btn btn-primary mx-1">直接購買</a>
+        <a href="#" id="cart-{{ item.id }}" class="cart btn btn-secondary mx-1">加入購物車</a>
+        <a href="#" id="buy-{{ item.id }}" class="buy btn btn-primary mx-1">直接購買</a>
       </div>
     </div>
   </div>
@@ -22,10 +22,7 @@
     <div class="col">{{ item.intro |linebreaks }}</div>
   </div>
 
-  <script type="text/javascript">
-      let btns = document.querySelectorAll('.admin.close')
-      for (let i = 0; i < btns.length; i++) {
-          btns[i].remove()
-      }
-  </script>
+  {% load static %}
+  <script src="{% static 'js/details.js' %}"></script>
+  <script src="{% static 'js/myUtils.js' %}"></script>
 {% endblock %}
