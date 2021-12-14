@@ -4,7 +4,9 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 import base64
 import json
+from googleoauth.auth_manager import GoogleAccountManager
 
+ga_manager = GoogleAccountManager()
 
 def get_authorization(user):
     return user.is_authenticated, user.is_staff
@@ -162,3 +164,18 @@ def cart_view(request):
         return post()
     else:
         return get()
+
+
+def google_login(request):
+    if request.user.is_authenticated:
+        return redirect('/shop/')
+    return ga_manager.login(request)
+
+
+def authorize(request):
+    response = ga_manager.authorize(request)
+    return response
+
+
+def oauth2callback(request):
+    return ga_manager.callback(request)
