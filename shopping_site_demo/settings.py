@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'shopping_site_demo.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 def get_env_config(s):
     if LOCAL_DEBUG:
-        with open(os.path.join(BASE_DIR, 'config'), 'r') as reader:
+        with open(os.path.join(BASE_DIR, 'config.json'), 'r') as reader:
             data = reader.read()
         js = json.loads(data)
         return js['DB_CONFIG'][s]

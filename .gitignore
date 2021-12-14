@@ -1,6 +1,6 @@
 .idea
 .DS_Store
 venv
-/config
+/config.json
 /static/
 /media/
