@@ -46,7 +46,7 @@ class GoogleAccountManager:
                 data = file.read()
             return json.loads(data)
 
-        config = os.environ.get('web')
+        config = os.environ.get('CLIENT_SECRET')
         return json.loads(config)
 
     def authorize(self, request):
