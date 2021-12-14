@@ -12,6 +12,7 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import os
+import json
 
 
 class GoogleAccountManager:
@@ -41,15 +42,12 @@ class GoogleAccountManager:
     @staticmethod
     def get_client_secret():
         if LOCAL_DEBUG:
-            import json
-
             with open(os.path.join(BASE_DIR, 'config.json'), 'r') as file:
                 data = file.read()
-            json_data = json.loads(data)
-            return json_data
+            return json.loads(data)
 
         config = os.environ.get('web')
-        return config
+        return json.loads(config)
 
     def authorize(self, request):
         flow = google_auth_oauthlib.flow.Flow.from_client_config(self.get_client_secret(), scopes=self.SCOPES)
