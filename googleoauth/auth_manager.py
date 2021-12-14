@@ -48,18 +48,7 @@ class GoogleAccountManager:
             json_data = json.loads(data)
             return json_data
 
-        config = {
-            'client_id': None,
-            "project_id": None,
-            "auth_uri": None,
-            "token_uri": None,
-            "auth_provider_x509_cert_url": None,
-            "client_secret": None,
-            "redirect_uris": None,
-            "javascript_origins": None
-        }
-        for k in config.keys():
-            config[k] = os.environ.get(k)
+        config = os.environ.get('web')
         return config
 
     def authorize(self, request):

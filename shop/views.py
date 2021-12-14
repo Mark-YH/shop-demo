@@ -8,6 +8,7 @@ from googleoauth.auth_manager import GoogleAccountManager
 
 ga_manager = GoogleAccountManager()
 
+
 def get_authorization(user):
     return user.is_authenticated, user.is_staff
 
